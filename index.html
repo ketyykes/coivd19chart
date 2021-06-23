@@ -46,8 +46,6 @@
             <div class="col-md-4">               
                 <canvas id="chartPie"></canvas>
             </div>
-            
-            
         </div>
         <div class="row">
             
@@ -58,8 +56,6 @@
                 <canvas id="chartAgeBarId"></canvas>
             </div>
         </div>
-        
-  
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
@@ -74,8 +70,10 @@
         const getAgeNum = document.querySelector('.age-num');
         const getFinalDataUpdate = document.querySelector('.final-data-update');
         let yourGoogleID = "https://script.google.com/macros/s/AKfycbx4h-5i-1K9kqUw18xarxGy8InnfuRR_41dg3LB_FbxRXwCIEDvgYlHgortxd3yTshd/exec";
-        let CorsUrl = "https://od.cdc.gov.tw/eic/Day_Confirmation_Age_County_Gender_19CoV.json"
-        fetch('https://murmuring-inlet-79086.herokuapp.com/').then((respons) => {
+        let CorsUrl = "https://od.cdc.gov.tw/eic/Day_Confirmation_Age_County_Gender_19CoV.json";
+        let myHeroku = 'https://pure-gorge-31442.herokuapp.com/api';
+        let someoneHeroku ='https://murmuring-inlet-79086.herokuapp.com/';
+        fetch(myHeroku).then((respons) => {
             return respons.json();
         }).then((respons) => {
             process(respons);
@@ -106,7 +104,7 @@
             }
         })
         getDistrictSelect.addEventListener("change",getAddEventListener);
-        renderAllplace('afterLoadingRender');
+        renderAllplace('afterLoadingRender');//資料載入後預先render全台的分布情況
         function getAddEventListener(e){
             renderAllplace(e);
         }
@@ -147,7 +145,6 @@
                             placeObj[objName][item[objName]] = 1;
                         }
                     }
-                   
                 }
                     putData('place');
                     putData('性別');
@@ -279,22 +276,21 @@
     let chartAgeObj;
     function renderAgeChart(placeObj){
         // console.log(placeObj);
-  
         chartBarAgeData ={
-                type: 'bar',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: '各年齡層人數',
-                        data: [],
-                        backgroundColor: [
-                            // 'rgba(255, 99, 132, 1 )',
-                            ],
-                        borderColor: [
-                            'rgba(255,99,132,1)',
-                            ],
-                        }]
-                }
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: '各年齡層人數',
+                    data: [],
+                    backgroundColor: [
+                        // 'rgba(255, 99, 132, 1 )',
+                        ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        ],
+                    }]
+            }
         }
         let partAgeAry = [];
         for(let key in placeObj['年齡層']){
@@ -313,13 +309,11 @@
                 if(a.age.length > b.age.length){
                     return 1;
                 }
-                if(a.age.length==b.age.length){
-                    if(a.age<b.age){
-                        return -1;
-                    }
-                    if(a.age>b.age){
-                        return 1;
-                    }
+                if(a.age.length==b.age.length&&a.age<b.age){
+                    return -1;
+                }
+                if(a.age.length==b.age.length&&a.age>b.age){
+                    return 1;
                 }
             }
         );
@@ -334,10 +328,8 @@
         })
         if(chartAgeObj){
             chartAgeObj.destroy();
-            chartAgeObj = new Chart(getChartAgeBarId,chartBarAgeData);
-        }else{
-            chartAgeObj = new Chart(getChartAgeBarId,chartBarAgeData);
         }
+        chartAgeObj = new Chart(getChartAgeBarId,chartBarAgeData);
     }
     </script>
 </body>
